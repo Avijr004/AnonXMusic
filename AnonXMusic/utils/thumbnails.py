@@ -64,6 +64,22 @@ async def get_thumb(videoid):
                     await f.write(await resp.read())
                     await f.close()
 
+        try:
+                wxyz = await app.get_chat_photos(user_id)
+                wxy = await app.download_media(wxyz[0]['file_id'], file_name=f'{user_id}.jpg')
+            except:
+                hehe = await app.get_chat_photos(app.id)
+                wxy = await app.download_media(hehe[0]['file_id'], file_name=f'{app.id}.jpg')
+            xy = Image.open(wxy)
+            a = Image.new('L', [640, 640], 0)
+            b = ImageDraw.Draw(a)
+            b.pieslice([(0, 0), (640,640)], 0, 360, fill = 255, outline = "white")                
+            c = np.array(xy)
+            d = np.array(a)
+            e = np.dstack((c, d))
+            f = Image.fromarray(e)
+            x = f.resize((197, 197))
+        
         youtube = Image.open(f"cache/thumb{videoid}.png")
         image1 = changeImageSize(1280, 720, youtube)
         image2 = image1.convert("RGBA")
@@ -71,6 +87,39 @@ async def get_thumb(videoid):
         enhancer = ImageEnhance.Brightness(background)
         background = enhancer.enhance(0.5)
         draw = ImageDraw.Draw(background)
+
+        circle = Image.open("assets/circle.png")
+
+        # changing circle color
+            im = circle
+            im = im.convert('RGBA')
+            color = make_col()
+
+            data = np.array(im)
+            red, green, blue, alpha = data.T
+
+            white_areas = (red == 255) & (blue == 255) & (green == 255)
+            data[..., :-1][white_areas.T] = color
+
+            im2 = Image.fromarray(data)
+            circle = im2
+            # done
+
+            image3 = image1.crop((280,0,1000,720))
+            lum_img = Image.new('L', [720,720] , 0)
+            draw = ImageDraw.Draw(lum_img)
+            draw.pieslice([(0,0), (720,720)], 0, 360, fill = 255, outline = "white")
+            img_arr = np.array(image3)
+            lum_img_arr = np.array(lum_img)
+            final_img_arr = np.dstack((img_arr,lum_img_arr))
+            image3 = Image.fromarray(final_img_arr)
+            image3 = image3.resize((380,380))
+            
+
+            image2.paste(image3, (229,141), mask = image3)
+            image2.paste(x, (980, 586), mask=x)
+            #image2.paste(circle, (0,0), mask = circle)
+        
         arial = ImageFont.truetype("AnonXMusic/assets/font2.ttf", 30)
         font = ImageFont.truetype("AnonXMusic/assets/font.ttf", 30)
         draw.text((1110, 8), unidecode(app.name), fill="white", font=arial)
