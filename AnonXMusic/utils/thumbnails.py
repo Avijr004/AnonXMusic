@@ -82,14 +82,14 @@ async def get_thumb(videoid):
         
         youtube = Image.open(f"cache/thumb{videoid}.png")
         image1 = changeImageSize(1280, 720, youtube)
-        bg = Image.open("assets/kaithumb.png")
+        bg = Image.open("AnonXMusic/assets/kaithumb.png")
         image2 = bg.convert("RGBA")
         #background = image2.filter(filter=ImageFilter.BoxBlur(30))
         enhancer = ImageEnhance.Brightness(image2)
         background = enhancer.enhance(1)
         image2 = background
         
-        circle = Image.open("assets/circle.png")
+        circle = Image.open("AnonXMusic/assets/circle.png")
 
         # changing circle color
             im = circle
