@@ -82,12 +82,13 @@ async def get_thumb(videoid):
         
         youtube = Image.open(f"cache/thumb{videoid}.png")
         image1 = changeImageSize(1280, 720, youtube)
-        image2 = image1.convert("RGBA")
-        background = image2.filter(filter=ImageFilter.BoxBlur(10))
-        enhancer = ImageEnhance.Brightness(background)
-        background = enhancer.enhance(0.5)
-        draw = ImageDraw.Draw(background)
-
+        bg = Image.open("assets/kaithumb.png")
+        image2 = bg.convert("RGBA")
+        #background = image2.filter(filter=ImageFilter.BoxBlur(30))
+        enhancer = ImageEnhance.Brightness(image2)
+        background = enhancer.enhance(1)
+        image2 = background
+        
         circle = Image.open("assets/circle.png")
 
         # changing circle color
@@ -163,7 +164,8 @@ async def get_thumb(videoid):
             os.remove(f"cache/thumb{videoid}.png")
         except:
             pass
-        background.save(f"cache/{videoid}.png")
+        image2 = image2.convert('RGB')
+        image2.save(f"cache/{videoid}.png")
         return f"cache/{videoid}.png"
     except Exception as e:
         print(e)
